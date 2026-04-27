@@ -3,31 +3,14 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import Svg, { Circle, G } from 'react-native-svg';
 import { useAuth } from '../../contexts/AuthContext';
 import { useEmployees } from '../../contexts/EmployeeContext';
+import { Colors, BorderRadius, FontSizes, Spacing } from '../../constants/theme';
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'active': return '#A8D5BA';
-    case 'inactive': return '#F5A9A9';
-    case 'on_leave': return '#F9D89C';
-    default: return '#C4C4C4';
-  }
-};
-
-const getStatusLabel = (status: string) => {
-  switch (status) {
-    case 'active': return 'Activo';
-    case 'inactive': return 'Inactivo';
-    case 'on_leave': return 'Permiso';
-    default: return status;
-  }
-};
-
-const getStatusIcon = (status: string) => {
-  switch (status) {
-    case 'active': return '✓';
-    case 'inactive': return '✕';
-    case 'on_leave': return '∿';
-    default: return '●';
+    case 'active': return Colors.light.success;
+    case 'inactive': return Colors.light.danger;
+    case 'on_leave': return Colors.light.warning;
+    default: return Colors.light.textTertiary;
   }
 };
 
@@ -52,15 +35,15 @@ const DonutChart = ({ active, inactive, onLeave }: { active: number; inactive: n
     <View style={styles.chartContainer}>
       <Svg width={size} height={size}>
         <G rotation="-90" origin={`${size / 2}, ${size / 2}`}>
-          <Circle cx={size / 2} cy={size / 2} r={radius} stroke="#F3F4F6" strokeWidth={strokeWidth} fill="none" />
+          <Circle cx={size / 2} cy={size / 2} r={radius} stroke={Colors.light.border} strokeWidth={strokeWidth} fill="none" />
           <Circle
             cx={size / 2} cy={size / 2} r={radius}
-            stroke="#A8D5BA" strokeWidth={strokeWidth} fill="none"
+            stroke={Colors.light.success} strokeWidth={strokeWidth} fill="none"
             strokeDasharray={`${activeLength} ${circumference}`} strokeDashoffset={0}
           />
           <Circle
             cx={size / 2} cy={size / 2} r={radius}
-            stroke="#F9D89C" strokeWidth={strokeWidth} fill="none"
+            stroke={Colors.light.warning} strokeWidth={strokeWidth} fill="none"
             strokeDasharray={`${leaveLength} ${circumference}`} strokeDashoffset={-activeLength}
           />
         </G>
@@ -93,7 +76,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.bentoGrid}>
-        <View style={[styles.bentoCard, styles.bentoLarge, { backgroundColor: '#E8F5E9' }]}>
+        <View style={[styles.bentoCard, styles.bentoLarge, { backgroundColor: Colors.light.success + '20' }]}>
           <View style={styles.bentoHeader}>
             <Text style={styles.bentoTitle}>Total</Text>
             <Text style={styles.bentoValue}>{stats.total}</Text>
@@ -101,9 +84,24 @@ export default function HomeScreen() {
           <DonutChart active={stats.active} inactive={stats.inactive} onLeave={stats.onLeave} />
         </View>
         
-        <StatCard title="Activos" value={stats.active} color="#4CAF50" bgColor="#E8F5E9" />
-        <StatCard title="Permiso" value={stats.onLeave} color="#FFB300" bgColor="#FFF8E1" />
-        <StatCard title="Inactivos" value={stats.inactive} color="#E57373" bgColor="#FFEBEE" />
+        <StatCard 
+          title="Activos" 
+          value={stats.active} 
+          color={Colors.light.accentDark} 
+          bgColor={Colors.light.success + '20'} 
+        />
+        <StatCard 
+          title="Permiso" 
+          value={stats.onLeave} 
+          color="#D97706" 
+          bgColor={Colors.light.warning + '20'} 
+        />
+        <StatCard 
+          title="Inactivos" 
+          value={stats.inactive} 
+          color="#E57373" 
+          bgColor={Colors.light.danger + '20'} 
+        />
       </View>
 
       <View style={styles.sectionHeader}>
@@ -113,10 +111,12 @@ export default function HomeScreen() {
       <View style={styles.employeeList}>
         {employees.slice(0, 5).map((employee) => (
           <TouchableOpacity key={employee.id} style={styles.employeeCard}>
-            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(employee.status) }]}>
-              <Text style={styles.statusIcon}>{getStatusIcon(employee.status)}</Text>
+            <View style={[styles.statusBadge, { backgroundColor: getStatusColor(employee.status) + '30' }]}>
+              <Text style={[styles.statusIcon, { color: getStatusColor(employee.status) }]}>
+                {employee.status === 'active' ? '✓' : employee.status === 'inactive' ? '✕' : '−'}
+              </Text>
             </View>
-            <View style={[styles.avatarContainer, { backgroundColor: '#F3F4F6' }]}>
+            <View style={[styles.avatarContainer, { backgroundColor: Colors.light.accent }]}>
               <Text style={styles.avatarText}>{getInitials(employee.name)}</Text>
             </View>
             <View style={styles.employeeInfo}>
@@ -131,50 +131,50 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: Colors.light.background },
   header: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    paddingHorizontal: 24, paddingTop: 60, paddingBottom: 20,
+    paddingHorizontal: Spacing.lg, paddingTop: 60, paddingBottom: Spacing.lg,
   },
-  greeting: { fontSize: 24, fontWeight: '300', color: '#4A4A4A', letterSpacing: 1 },
+  greeting: { fontSize: FontSizes.xl, fontFamily: 'Poppins-Regular', color: Colors.light.text, letterSpacing: 1 },
   logoutButton: {
-    width: 36, height: 36, borderRadius: 18, backgroundColor: '#F8FAFC',
+    width: 36, height: 36, borderRadius: 18, backgroundColor: Colors.light.surface,
     justifyContent: 'center', alignItems: 'center',
   },
-  logoutText: { fontSize: 14, color: '#A5B4C4' },
+  logoutText: { fontSize: 14, color: Colors.light.textTertiary },
   bentoGrid: {
-    flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 20, gap: 12,
+    flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: Spacing.lg, gap: Spacing.md,
   },
   bentoCard: {
-    borderRadius: 20, padding: 16, alignItems: 'center', justifyContent: 'center',
+    borderRadius: BorderRadius.xl, padding: Spacing.md, alignItems: 'center', justifyContent: 'center',
   },
   bentoLarge: {
     width: '100%', flexDirection: 'row', justifyContent: 'space-between',
   },
   bentoHeader: { flex: 1 },
-  bentoTitle: { fontSize: 14, color: '#4A4A4A', opacity: 0.7 },
-  bentoValue: { fontSize: 32, fontWeight: '600', color: '#4A4A4A' },
-  statCard: { flex: 1, minWidth: '30%', borderRadius: 20, padding: 16, alignItems: 'center' },
-  statValue: { fontSize: 28, fontWeight: '600' },
-  statTitle: { fontSize: 12, color: '#4A4A4A', opacity: 0.7, marginTop: 4 },
+  bentoTitle: { fontSize: FontSizes.sm, color: Colors.light.text, opacity: 0.7, fontFamily: 'Poppins-Regular' },
+  bentoValue: { fontSize: 32, fontFamily: 'Poppins-Bold', color: Colors.light.text },
+  statCard: { flex: 1, minWidth: '30%', borderRadius: BorderRadius.xl, padding: Spacing.md, alignItems: 'center' },
+  statValue: { fontSize: 28, fontFamily: 'Poppins-Bold' },
+  statTitle: { fontSize: FontSizes.xs, color: Colors.light.text, opacity: 0.7, marginTop: 4, fontFamily: 'Poppins-Regular' },
   chartContainer: { alignItems: 'center', justifyContent: 'center' },
-  sectionHeader: { paddingHorizontal: 24, marginTop: 24, marginBottom: 16 },
-  sectionTitle: { fontSize: 18, fontWeight: '300', color: '#4A4A4A', letterSpacing: 2 },
-  employeeList: { paddingHorizontal: 24, paddingBottom: 100, gap: 10 },
+  sectionHeader: { paddingHorizontal: Spacing.lg, marginTop: Spacing.lg, marginBottom: Spacing.md },
+  sectionTitle: { fontSize: FontSizes.lg, fontFamily: 'Poppins-SemiBold', color: Colors.light.text, letterSpacing: 2 },
+  employeeList: { paddingHorizontal: Spacing.lg, paddingBottom: 100, gap: Spacing.sm },
   employeeCard: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8FAFC',
-    borderRadius: 16, padding: 12, position: 'relative',
+    flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.light.surface,
+    borderRadius: BorderRadius.lg, padding: Spacing.md, position: 'relative',
   },
   statusBadge: {
     position: 'absolute', top: 8, right: 8, width: 24, height: 24,
     borderRadius: 12, alignItems: 'center', justifyContent: 'center',
   },
-  statusIcon: { fontSize: 12, color: '#4A4A4A' },
+  statusIcon: { fontSize: 12, fontFamily: 'Poppins-Bold' },
   avatarContainer: {
     width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center',
   },
-  avatarText: { color: '#4A4A4A', fontSize: 14, fontWeight: '500' },
-  employeeInfo: { flex: 1, marginLeft: 12 },
-  employeeName: { fontSize: 14, fontWeight: '500', color: '#4A4A4A' },
-  employeePosition: { fontSize: 12, color: '#A5B4C4', marginTop: 2 },
+  avatarText: { color: Colors.light.text, fontSize: FontSizes.sm, fontFamily: 'Poppins-SemiBold' },
+  employeeInfo: { flex: 1, marginLeft: Spacing.sm },
+  employeeName: { fontSize: FontSizes.sm, fontFamily: 'Poppins-Medium', color: Colors.light.text },
+  employeePosition: { fontSize: FontSizes.xs, color: Colors.light.textTertiary, marginTop: 2 },
 });

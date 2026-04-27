@@ -1,22 +1,19 @@
 import { Tabs, useRouter, useSegments } from 'expo-router';
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useAuth } from '../../contexts/AuthContext';
+import { Colors } from '../../constants/theme';
 
-const TabIcon = ({ name, focused }: { name: string; focused: boolean }) => {
-  const icons: Record<string, string> = {
-    home: '⌂',
-    employees: '☺',
-  };
-  
-  return (
-    <View style={styles.tabIconContainer}>
-      <Text style={[styles.tabIcon, focused && styles.tabIconFocused]}>
-        {icons[name] || '●'}
-      </Text>
-    </View>
-  );
-};
+const TabIcon = ({ name, focused }: { name: string; focused: boolean }) => (
+  <View style={styles.tabIconContainer}>
+    <Feather 
+      name={name as any} 
+      size={22} 
+      color={focused ? Colors.light.text : Colors.light.textTertiary} 
+    />
+  </View>
+);
 
 function TabLayoutWithAuth() {
   const { isAuthenticated } = useAuth();
@@ -36,8 +33,8 @@ function TabLayoutWithAuth() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#4A4A4A',
-        tabBarInactiveTintColor: '#C9C9C9',
+        tabBarActiveTintColor: Colors.light.text,
+        tabBarInactiveTintColor: Colors.light.textTertiary,
         tabBarStyle: styles.tabBar,
         tabBarLabelStyle: styles.tabBarLabel,
       }}>
@@ -52,7 +49,21 @@ function TabLayoutWithAuth() {
         name="explore"
         options={{
           title: 'Personal',
-          tabBarIcon: ({ focused }) => <TabIcon name="employees" focused={focused} />,
+          tabBarIcon: ({ focused }) => <TabIcon name="users" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="attendance"
+        options={{
+          title: 'Asistencia',
+          tabBarIcon: ({ focused }) => <TabIcon name="calendar" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: 'Ajustes',
+          tabBarIcon: ({ focused }) => <TabIcon name="settings" focused={focused} />,
         }}
       />
     </Tabs>
@@ -66,31 +77,20 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 0,
+    backgroundColor: Colors.light.background,
+    borderTopWidth: 1,
+    borderTopColor: Colors.light.border,
     elevation: 0,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
     height: 70,
-    paddingBottom: 14,
+    paddingBottom: 10,
     paddingTop: 10,
   },
   tabBarLabel: {
     fontSize: 11,
-    fontWeight: '400',
-    letterSpacing: 0.5,
+    fontFamily: 'Poppins-Medium',
   },
   tabIconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  tabIcon: {
-    fontSize: 22,
-    color: '#C9C9C9',
-  },
-  tabIconFocused: {
-    color: '#4A4A4A',
   },
 });

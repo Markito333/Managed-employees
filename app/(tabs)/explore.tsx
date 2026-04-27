@@ -8,15 +8,17 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { useEmployees } from '../../contexts/EmployeeContext';
 import { Employee } from '../../data/employees';
+import { Colors, BorderRadius, FontSizes, Spacing } from '../../constants/theme';
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'active': return '#A8D5BA';
-    case 'inactive': return '#F5A9A9';
-    case 'on_leave': return '#F9D89C';
-    default: return '#C4C4C4';
+    case 'active': return Colors.light.success;
+    case 'inactive': return Colors.light.danger;
+    case 'on_leave': return Colors.light.warning;
+    default: return Colors.light.textTertiary;
   }
 };
 
@@ -31,10 +33,10 @@ const getStatusLabel = (status: string) => {
 
 const getStatusIcon = (status: string) => {
   switch (status) {
-    case 'active': return '✓';
-    case 'inactive': return '✕';
-    case 'on_leave': return '∿';
-    default: return '●';
+    case 'active': return 'check';
+    case 'inactive': return 'x';
+    case 'on_leave': return 'minus';
+    default: return 'circle';
   }
 };
 
@@ -69,10 +71,12 @@ export default function EmployeesScreen() {
 
   const renderEmployee = ({ item }: { item: Employee }) => (
     <TouchableOpacity style={styles.employeeCard}>
-      <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) }]}>
-        <Text style={styles.statusIcon}>{getStatusIcon(item.status)}</Text>
+      <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.status) + '30' }]}>
+        <Text style={[styles.statusIcon, { color: getStatusColor(item.status) }]}>
+          {item.status === 'active' ? '✓' : item.status === 'inactive' ? '✕' : '−'}
+        </Text>
       </View>
-      <View style={[styles.avatarContainer, { backgroundColor: '#F3F4F6' }]}>
+      <View style={[styles.avatarContainer, { backgroundColor: Colors.light.accent }]}>
         <Text style={styles.avatarText}>{getInitials(item.name)}</Text>
       </View>
       <View style={styles.employeeInfo}>
@@ -91,10 +95,11 @@ export default function EmployeesScreen() {
       </View>
 
       <View style={styles.searchContainer}>
+        <Feather name="search" size={20} color={Colors.light.textTertiary} style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Buscar..."
-          placeholderTextColor="#A5B4C4"
+          placeholderTextColor={Colors.light.textTertiary}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -141,41 +146,42 @@ export default function EmployeesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
-  header: { paddingHorizontal: 24, paddingTop: 60, paddingBottom: 20, backgroundColor: '#FFFFFF' },
-  headerTitle: { fontSize: 28, fontWeight: '300', color: '#4A4A4A', letterSpacing: 2 },
-  headerSubtitle: { fontSize: 14, color: '#A5B4C4', marginTop: 4 },
-  searchContainer: { paddingHorizontal: 24, marginBottom: 16 },
+  container: { flex: 1, backgroundColor: Colors.light.background },
+  header: { paddingHorizontal: Spacing.lg, paddingTop: 60, paddingBottom: Spacing.lg, backgroundColor: Colors.light.background },
+  headerTitle: { fontSize: FontSizes.xxl, fontFamily: 'Poppins-SemiBold', color: Colors.light.text, letterSpacing: 2 },
+  headerSubtitle: { fontSize: FontSizes.sm, color: Colors.light.textSecondary, marginTop: 4 },
+  searchContainer: { paddingHorizontal: Spacing.lg, marginBottom: Spacing.md },
+  searchIcon: { position: 'absolute', left: Spacing.lg, top: 16, zIndex: 1 },
   searchInput: {
-    backgroundColor: '#F8FAFC', borderRadius: 16, paddingHorizontal: 20,
-    paddingVertical: 14, fontSize: 16, color: '#4A4A4A',
+    backgroundColor: Colors.light.surface, borderRadius: BorderRadius.lg, paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.md, fontSize: FontSizes.md, color: Colors.light.text, fontFamily: 'Poppins-Regular',
   },
-  filterContainer: { paddingHorizontal: 24, marginBottom: 16 },
+  filterContainer: { paddingHorizontal: Spacing.lg, marginBottom: Spacing.md },
   filterButton: {
-    paddingHorizontal: 18, paddingVertical: 10, borderRadius: 20,
-    backgroundColor: '#F8FAFC', marginRight: 10,
+    paddingHorizontal: Spacing.md, paddingVertical: Spacing.sm, borderRadius: BorderRadius.full,
+    backgroundColor: Colors.light.surface, marginRight: Spacing.sm,
   },
-  filterButtonActive: { backgroundColor: '#4A4A4A' },
-  filterText: { fontSize: 13, color: '#A5B4C4', fontWeight: '500' },
-  filterTextActive: { color: '#FFFFFF' },
-  listContent: { paddingHorizontal: 24, paddingBottom: 100 },
+  filterButtonActive: { backgroundColor: Colors.light.primary },
+  filterText: { fontSize: FontSizes.sm, color: Colors.light.textSecondary, fontFamily: 'Poppins-Medium' },
+  filterTextActive: { color: Colors.light.background },
+  listContent: { paddingHorizontal: Spacing.lg, paddingBottom: 100 },
   employeeCard: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8FAFC',
-    borderRadius: 16, padding: 12, marginBottom: 10, position: 'relative',
+    flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.light.surface,
+    borderRadius: BorderRadius.lg, padding: Spacing.md, marginBottom: Spacing.sm, position: 'relative',
   },
   statusBadge: {
     position: 'absolute', top: 8, right: 8, width: 24, height: 24,
     borderRadius: 12, alignItems: 'center', justifyContent: 'center',
   },
-  statusIcon: { fontSize: 12, color: '#4A4A4A' },
+  statusIcon: { fontSize: 12, fontFamily: 'Poppins-Bold' },
   avatarContainer: {
     width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center',
   },
-  avatarText: { color: '#4A4A4A', fontSize: 14, fontWeight: '500' },
-  employeeInfo: { flex: 1, marginLeft: 12 },
-  employeeName: { fontSize: 14, fontWeight: '500', color: '#4A4A4A' },
-  employeePosition: { fontSize: 12, color: '#A5B4C4', marginTop: 2 },
-  employeeDepartment: { fontSize: 10, color: '#C9C9C9', marginTop: 2 },
+  avatarText: { color: Colors.light.text, fontSize: FontSizes.sm, fontFamily: 'Poppins-SemiBold' },
+  employeeInfo: { flex: 1, marginLeft: Spacing.sm },
+  employeeName: { fontSize: FontSizes.md, fontFamily: 'Poppins-Medium', color: Colors.light.text },
+  employeePosition: { fontSize: FontSizes.sm, color: Colors.light.textSecondary, marginTop: 2 },
+  employeeDepartment: { fontSize: FontSizes.xs, color: Colors.light.textTertiary, marginTop: 2 },
   emptyContainer: { padding: 40, alignItems: 'center' },
-  emptyText: { fontSize: 14, color: '#C9C9C9' },
+  emptyText: { fontSize: FontSizes.md, color: Colors.light.textTertiary },
 });

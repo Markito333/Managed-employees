@@ -14,6 +14,7 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { useAuth } from '../contexts/AuthContext';
 import { router } from 'expo-router';
+import { Colors, BorderRadius, FontSizes, Spacing } from '../constants/theme';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -56,16 +57,16 @@ export default function LoginScreen() {
             resizeMode="contain"
           />
           <Text style={styles.title}>Bienvenido</Text>
-          <Text style={styles.subtitle}>Gestión de Personal</Text>
+          <Text style={styles.subtitle}>Workforce Management</Text>
         </View>
 
         <View style={styles.form}>
           <View style={styles.inputContainer}>
-            <Feather name="mail" size={20} color="#A5B4C4" style={styles.inputIcon} />
+            <Feather name="mail" size={20} color={Colors.light.textTertiary} style={styles.inputIcon} />
             <TextInput
               style={styles.input}
               placeholder="Correo"
-              placeholderTextColor="#A5B4C4"
+              placeholderTextColor={Colors.light.textTertiary}
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -74,11 +75,11 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.inputContainer}>
-            <Feather name="lock" size={20} color="#A5B4C4" style={styles.inputIcon} />
+            <Feather name="lock" size={20} color={Colors.light.textTertiary} style={styles.inputIcon} />
             <TextInput
               style={styles.input}
               placeholder="Contraseña"
-              placeholderTextColor="#A5B4C4"
+              placeholderTextColor={Colors.light.textTertiary}
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
@@ -90,7 +91,7 @@ export default function LoginScreen() {
               <Feather 
                 name={showPassword ? 'eye-off' : 'eye'} 
                 size={20} 
-                color="#A5B4C4" 
+                color={Colors.light.textTertiary} 
               />
             </TouchableOpacity>
           </View>
@@ -106,33 +107,34 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
 
+        <Text style={styles.hint}>admin@empresa.com / admin123</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
-  scrollContent: { flexGrow: 1, justifyContent: 'center', padding: 32 },
-  header: { alignItems: 'center', marginBottom: 38 },
+  container: { flex: 1, backgroundColor: Colors.light.background },
+  scrollContent: { flexGrow: 1, justifyContent: 'center', padding: Spacing.xl },
+  header: { alignItems: 'center', marginBottom: Spacing.xl },
   logoImage: { width: 130, height: 130, marginBottom: 20 },
-  title: { fontSize: 28, fontWeight: '300', color: '#4A4A4A', letterSpacing: 2 },
-  subtitle: { fontSize: 14, color: '#A5B4C4', marginTop: 8 },
-  form: { gap: 16 },
+  title: { fontSize: FontSizes.xxl, fontFamily: 'Poppins-Light', color: Colors.light.text, letterSpacing: 2 },
+  subtitle: { fontSize: FontSizes.sm, color: Colors.light.textSecondary, marginTop: Spacing.sm },
+  form: { gap: Spacing.md },
   inputContainer: {
-    flexDirection: 'row', alignItems: 'center', backgroundColor: '#F8FAFC',
-    borderRadius: 16, paddingHorizontal: 16,
+    flexDirection: 'row', alignItems: 'center', backgroundColor: Colors.light.surface,
+    borderRadius: BorderRadius.lg, paddingHorizontal: Spacing.md,
   },
-  inputIcon: { marginRight: 12 },
+  inputIcon: { marginRight: Spacing.sm },
   input: {
-    flex: 1, paddingVertical: 16, fontSize: 16, color: '#4A4A4A',
+    flex: 1, paddingVertical: Spacing.md, fontSize: FontSizes.md, color: Colors.light.text, fontFamily: 'Poppins-Regular',
   },
-  eyeIcon: { padding: 4 },
+  eyeIcon: { padding: Spacing.xs },
   button: {
-    backgroundColor: '#000000', borderRadius: 16, paddingVertical: 10,
-    alignItems: 'center', marginTop: 8,
+    backgroundColor: Colors.light.primary, borderRadius: BorderRadius.lg, paddingVertical: Spacing.md,
+    alignItems: 'center', marginTop: Spacing.sm,
   },
   buttonDisabled: { opacity: 0.6 },
-  buttonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '500' },
-  hint: { textAlign: 'center', marginTop: 32, fontSize: 12, color: '#C9C9C9' },
+  buttonText: { color: Colors.light.background, fontSize: FontSizes.md, fontFamily: 'Poppins-Medium' },
+  hint: { textAlign: 'center', marginTop: Spacing.xl, fontSize: FontSizes.xs, color: Colors.light.textTertiary },
 });
